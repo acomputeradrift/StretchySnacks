@@ -13,12 +13,45 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     @IBOutlet weak var headerUIView: UIView!
     @IBOutlet weak var headerHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var addUIButton: UIButton!
+    @IBOutlet weak var snackTableView: UITableView!
     
     //MARK: Properties
     var stackView:UIStackView!
     var stackBottomToHeaderTop:NSLayoutConstraint!
     var stackBottomToHeaderBottom:NSLayoutConstraint!
     var snacksArray = [Snack]()
+    
+    //MARK: Creating the imageViews
+    lazy var oreoUIImageView: UIImageView = {
+        let oreoImage = UIImage(named: "oreos")
+        let oreoImageView = UIImageView(image: oreoImage!)
+        oreoImageView.isUserInteractionEnabled = true
+        return oreoImageView
+    }()
+    lazy var pizzaPocketUIImageView: UIImageView = {
+        let pizzaPocketImage = UIImage(named: "pizza_pockets")
+        let pizzaPocketImageView = UIImageView(image: pizzaPocketImage!)
+        pizzaPocketImageView.isUserInteractionEnabled = true
+        return pizzaPocketImageView
+    }()
+    lazy var popTartsUIImageView: UIImageView = {
+        let popTartsImage = UIImage(named: "pop_tarts")
+        let popTartsImageView = UIImageView(image: popTartsImage!)
+        popTartsImageView.isUserInteractionEnabled = true
+        return popTartsImageView
+    }()
+    lazy var popsicleUIImageView: UIImageView = {
+        let popsicleImage = UIImage(named: "popsicleTransparent")
+        let popsicleImageView = UIImageView(image: popsicleImage!)
+        popsicleImageView.isUserInteractionEnabled = true
+        return popsicleImageView
+    }()
+    lazy var ramenUIImageView: UIImageView = {
+        let ramenImage = UIImage(named: "ramenTransparent")
+        let ramenImageView = UIImageView(image: ramenImage!)
+        ramenImageView.isUserInteractionEnabled = true
+        return ramenImageView
+    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,9 +60,9 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     //MARK: Header Setup
     @IBAction func AddMenuUIButton(_ sender: UIButton) {
-      
+        
         sender.isSelected = !sender.isSelected
-        let heightConstant:CGFloat = sender.isSelected ? 300 : 64
+        let heightConstant:CGFloat = sender.isSelected ? 200 : 64
         let spinAmount:CGFloat = sender.isSelected ? 3.92 : 0
         
         //header stretch
@@ -62,40 +95,24 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     func setUpStackView(){
         
-        // create UIImage Views and add photos
-        let oreoImage = UIImage(named: "oreos")
-        let oreoUIImageView = UIImageView(image: oreoImage!)
-        oreoUIImageView.isUserInteractionEnabled = true
+        // create tapGesture Recognizers
         let oreoButton = UITapGestureRecognizer(target: self, action: #selector(addOreoToArray))
-        oreoUIImageView.addGestureRecognizer(oreoButton)
+        self.oreoUIImageView.addGestureRecognizer(oreoButton)
         
-        
-        let pizzaPocketImage = UIImage(named: "pizza_pockets")
-        let pizzaPocketUIImageView = UIImageView(image: pizzaPocketImage!)
-        pizzaPocketUIImageView.isUserInteractionEnabled = true
         let pizzaPocketButton = UITapGestureRecognizer(target: self, action: #selector(addPizzaPocketToArray))
-        oreoUIImageView.addGestureRecognizer(oreoButton)
+        self.pizzaPocketUIImageView.addGestureRecognizer(pizzaPocketButton)
         
-        let popTartsImage = UIImage(named: "pop_tarts")
-        let popTartsUIImageView = UIImageView(image: popTartsImage!)
-        popTartsUIImageView.isUserInteractionEnabled = true
         let popTartsButton = UITapGestureRecognizer(target: self, action: #selector(addPopTartsToArray))
-        popTartsUIImageView.addGestureRecognizer(popTartsButton)
+        self.popTartsUIImageView.addGestureRecognizer(popTartsButton)
         
-        let popsicleImage = UIImage(named: "popsicleTransparent")
-        let popsicleUIImageView = UIImageView(image: popsicleImage!)
-        popsicleUIImageView.isUserInteractionEnabled = true
         let popsicleButton = UITapGestureRecognizer(target: self, action: #selector(addPopsicleToArray))
-        popsicleUIImageView.addGestureRecognizer(popsicleButton)
+        self.popsicleUIImageView.addGestureRecognizer(popsicleButton)
         
-        let ramenImage = UIImage(named: "ramenTransparent")
-        let ramenUIImageView = UIImageView(image: ramenImage!)
-        ramenUIImageView.isUserInteractionEnabled = true
         let ramenButton = UITapGestureRecognizer(target: self, action: #selector(addRamenToArray))
-        ramenUIImageView.addGestureRecognizer(ramenButton)
+        self.ramenUIImageView.addGestureRecognizer(ramenButton)
         
         // create stackView and add imageViews
-        stackView = UIStackView(arrangedSubviews: [oreoUIImageView, pizzaPocketUIImageView, popTartsUIImageView, popsicleUIImageView, ramenUIImageView])
+        stackView = UIStackView(arrangedSubviews: [self.oreoUIImageView, self.pizzaPocketUIImageView, self.popTartsUIImageView, self.popsicleUIImageView, self.ramenUIImageView])
         stackView.axis = .horizontal
         stackView.distribution = .fillProportionally
         headerUIView.addSubview(stackView)
@@ -126,26 +143,90 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         cell.snackUILabel.text = snack.name
         return cell
     }
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return true
+        
+    }
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            snacksArray.remove(at: indexPath.row)
+            tableView.deleteRows(at: [indexPath], with: .fade)
+        } else if editingStyle == .insert {
+            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
+        }
+    }
+
+   func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
+        
+    }
+    
+    //MARK: Add Objects to array
     
     @objc func addOreoToArray(sender:UIImageView){
         let snack = Snack(name: "oreos")
         snacksArray.append(snack)
+        self.snackTableView.reloadData()
+        UIView.animate(withDuration: 1, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 5, animations:{
+            self.oreoUIImageView.transform = self.oreoUIImageView.transform.rotated(by: CGFloat.pi)
+            self.view.layoutIfNeeded()
+        })
+        UIView.animate(withDuration: 1, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 5, animations:{
+            self.oreoUIImageView.transform = self.oreoUIImageView.transform.rotated(by: CGFloat.pi)
+            self.view.layoutIfNeeded()
+        })
+        
     }
     @objc func addPizzaPocketToArray(sender:UIImageView){
         let snack = Snack(name: "pizza pocket")
         snacksArray.append(snack)
+        self.snackTableView.reloadData()
+        UIView.animate(withDuration: 1, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 5, animations:{
+            self.pizzaPocketUIImageView.transform = self.pizzaPocketUIImageView.transform.rotated(by: CGFloat.pi)
+            self.view.layoutIfNeeded()
+        })
+        UIView.animate(withDuration: 1, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 5, animations:{
+            self.pizzaPocketUIImageView.transform = self.pizzaPocketUIImageView.transform.rotated(by: CGFloat.pi)
+            self.view.layoutIfNeeded()
+        })
     }
     @objc func addPopTartsToArray(sender:UIImageView){
         let snack = Snack(name: "pop tarts")
         snacksArray.append(snack)
+        self.snackTableView.reloadData()
+        UIView.animate(withDuration: 1, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 5, animations:{
+            self.popTartsUIImageView.transform = self.popTartsUIImageView.transform.rotated(by: CGFloat.pi)
+            self.view.layoutIfNeeded()
+        })
+        UIView.animate(withDuration: 1, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 5, animations:{
+            self.popTartsUIImageView.transform = self.popTartsUIImageView.transform.rotated(by: CGFloat.pi)
+            self.view.layoutIfNeeded()
+        })
     }
     @objc func addPopsicleToArray(sender:UIImageView){
         let snack = Snack(name: "popsicle")
         snacksArray.append(snack)
+        self.snackTableView.reloadData()
+        UIView.animate(withDuration: 1, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 5, animations:{
+            self.popsicleUIImageView.transform = self.popsicleUIImageView.transform.rotated(by: CGFloat.pi)
+            self.view.layoutIfNeeded()
+        })
+        UIView.animate(withDuration: 1, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 5, animations:{
+            self.popsicleUIImageView.transform = self.popsicleUIImageView.transform.rotated(by: CGFloat.pi)
+            self.view.layoutIfNeeded()
+        })
     }
     @objc func addRamenToArray(sender:UIImageView){
         let snack = Snack(name: "ramen")
         snacksArray.append(snack)
+        self.snackTableView.reloadData()
+        UIView.animate(withDuration: 1, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 5, animations:{
+            self.ramenUIImageView.transform = self.ramenUIImageView.transform.rotated(by: CGFloat.pi)
+            self.view.layoutIfNeeded()
+        })
+        UIView.animate(withDuration: 1, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 5, animations:{
+            self.ramenUIImageView.transform = self.ramenUIImageView.transform.rotated(by: CGFloat.pi)
+            self.view.layoutIfNeeded()
+        })
     }
 }
 

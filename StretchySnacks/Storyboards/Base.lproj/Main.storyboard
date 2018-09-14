@@ -96,11 +96,12 @@
                         <outlet property="addUIButton" destination="EFd-ln-AHM" id="S2c-fN-MQB"/>
                         <outlet property="headerHeightConstraint" destination="HAx-nJ-AM0" id="QeD-fe-meI"/>
                         <outlet property="headerUIView" destination="1ir-Rm-ef0" id="hUv-s4-bVH"/>
+                        <outlet property="snackTableView" destination="xWT-M6-lO0" id="ULx-kh-OcC"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-138" y="93"/>
+            <point key="canvasLocation" x="-236" y="136"/>
         </scene>
     </scenes>
 </document>
