@@ -19,6 +19,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     var stackView:UIStackView!
     var stackBottomToHeaderTop:NSLayoutConstraint!
     var stackBottomToHeaderBottom:NSLayoutConstraint!
+    var titleUILabelYConstant = NSLayoutConstraint()
     var snacksArray = [Snack]()
     
     //MARK: Creating the imageViews
@@ -52,10 +53,16 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         ramenImageView.isUserInteractionEnabled = true
         return ramenImageView
     }()
+    lazy var titleUILabel: UILabel = {
+        let titleLabel = UILabel(frame: CGRect(x: headerUIView.center.x - 115, y: headerUIView.center.y - 10, width: 230, height: 20))
+        titleLabel.text = "Add Snacks"
+        return titleLabel
+    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpStackView()
+        setUpTitle()
     }
     
     //MARK: Header Setup
@@ -64,7 +71,10 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         sender.isSelected = !sender.isSelected
         let heightConstant:CGFloat = sender.isSelected ? 200 : 64
         let spinAmount:CGFloat = sender.isSelected ? 3.92 : 0
+        self.titleUILabel.text = sender.isSelected ? "Snacks" : "Add Snacks"
+        self.titleUILabelYConstant.constant = sender.isSelected ? 40 : 0
         
+        //combine these 3
         //header stretch
         UIView.animate(withDuration: 1, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 5, animations: {
             self.headerHeightConstraint.constant = heightConstant // Some value
@@ -89,14 +99,19 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             }
             self.view.layoutIfNeeded()
         })
-        //add the title
+        //modify the title
         //let titleLabel = UILabel()
-//        let titleLabel = UILabel(frame: CGRect(x: headerUIView.center.x - 115, y: headerUIView.center.y - 10, width: 230, height: 20))
-//        titleLabel.text = "Snacks"
-//        titleLabel.textAlignment = NSTextAlignment.center
-//        self.headerUIView.addSubview(titleLabel)
-//        titleLabel.centerXAnchor.constraint(equalTo: headerUIView.centerXAnchor, constant: 0).isActive = true
-//          titleLabel.centerYAnchor.constraint(equalTo: headerUIView.centerYAnchor, constant: 0).isActive = true
+        
+    }
+    
+    func setUpTitle(){
+        //let titleLabel = UILabel(frame: CGRect(x: headerUIView.center.x - 115, y: headerUIView.center.y - 10, width: 230, height: 20))
+        self.titleUILabel.text = "Add Snacks"
+        self.titleUILabel.textAlignment = NSTextAlignment.center
+        self.headerUIView.addSubview(self.titleUILabel)
+        self.titleUILabel.centerXAnchor.constraint(equalTo: headerUIView.centerXAnchor, constant: 0).isActive = true
+        self.titleUILabelYConstant = self.titleUILabel.centerYAnchor.constraint(equalTo: headerUIView.centerYAnchor, constant: 0)
+        self.titleUILabelYConstant.isActive = true
     }
     
     //MARK: StackView Setup
