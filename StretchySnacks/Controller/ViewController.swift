@@ -89,6 +89,14 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             }
             self.view.layoutIfNeeded()
         })
+        //add the title
+        //let titleLabel = UILabel()
+//        let titleLabel = UILabel(frame: CGRect(x: headerUIView.center.x - 115, y: headerUIView.center.y - 10, width: 230, height: 20))
+//        titleLabel.text = "Snacks"
+//        titleLabel.textAlignment = NSTextAlignment.center
+//        self.headerUIView.addSubview(titleLabel)
+//        titleLabel.centerXAnchor.constraint(equalTo: headerUIView.centerXAnchor, constant: 0).isActive = true
+//          titleLabel.centerYAnchor.constraint(equalTo: headerUIView.centerYAnchor, constant: 0).isActive = true
     }
     
     //MARK: StackView Setup
